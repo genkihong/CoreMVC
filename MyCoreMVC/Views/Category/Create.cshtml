@@ -1,0 +1,29 @@
+﻿@model Category
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <h2>Create Category</h2>
+        @*所有錯誤訊息*@
+        @*<div asp-validation-summary="All"></div>*@
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control">
+            @*錯誤訊息*@
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="DisplayOrder" class="form-label"></label>
+            <input asp-for="DisplayOrder" class="form-control">
+            @*錯誤訊息*@
+            <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a asp-controller="Category" asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+    </div>
+</form>
+@*client side validation*@
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
