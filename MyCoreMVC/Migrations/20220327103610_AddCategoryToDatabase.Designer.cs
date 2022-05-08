@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MyCoreMVC_20220327.Data;
+using MyCoreMVC.Data;
 
 #nullable disable
 
-namespace MyCoreMVC_20220327.Migrations
+namespace MyCoreMVC.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20220327103610_AddCategoryToDatabase")]

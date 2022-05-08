@@ -1,24 +1,26 @@
 ﻿@model IEnumerable<Category>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "類型清單";
 }
 
 <div class="p-3">
     <div class="d-flex mb-3">
         <h2 class="text-primary me-auto">Category List</h2>
-        <a asp-controller="Category" asp-action="Create" class="btn btn-primary">
-            <i class="bi bi-plus-circle me-1"></i>Create New Category
-        </a>
+        <div>
+            <a asp-controller="Category" asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>新增
+            </a>
+        </div>
     </div>
 
     <table class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
                 <th>
-                    Category Name
+                    類型名稱
                 </th>
                 <th>
-                    Display Order
+                    訂購數量
                 </th>
             </tr>
         </thead>
@@ -26,11 +28,21 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td width=50%>
+                    <td width=30%>
                         @item.Name
                     </td>
-                    <td width=50%>
+                    <td width=30%>
                         @item.DisplayOrder
+                    </td>
+                    <td>
+                        <div class="text-end">
+                            <a asp-controller="Category" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">
+                                <i class="bi bi-pencil-square me-1"></i>編輯
+                            </a>
+                            <a asp-controller="Category" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">
+                                <i class="bi bi-trash-fill me-1"></i>刪除
+                            </a>
+                        </div>
                     </td>
                 </tr>
             }

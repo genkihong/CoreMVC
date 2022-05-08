@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace MyCoreMVC_20220327.Migrations
+namespace MyCoreMVC.Migrations
 {
     /// <inheritdoc />
     public partial class AddCategoryToDatabase : Migration

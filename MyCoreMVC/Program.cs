@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using MyCoreMVC_20220327.Data;
+using MyCoreMVC.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

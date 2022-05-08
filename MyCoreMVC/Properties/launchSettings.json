@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "MyCoreMVC_20220327": {
+    "MyCoreMVC": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

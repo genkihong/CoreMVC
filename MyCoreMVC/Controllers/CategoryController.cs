@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyCoreMVC_20220327.Data;
-using MyCoreMVC_20220327.Models;
+using MyCoreMVC.Data;
+using MyCoreMVC.Models;
 
-namespace MyCoreMVC_20220327.Controllers
+namespace MyCoreMVC.Controllers
 {
     public class CategoryController : Controller
     {
@@ -35,6 +35,7 @@ namespace MyCoreMVC_20220327.Controllers
             {
                 _db.Categories.Add(category);
                 _db.SaveChanges();
+                TempData["success"] = "已新增";
                 return RedirectToAction("Index");
             }
             return View(category);
@@ -53,7 +54,7 @@ namespace MyCoreMVC_20220327.Controllers
             {
                 return NotFound();
             }
-            return View();
+            return View(category);
         }
         //修改 POST
         [HttpPost]
@@ -66,11 +67,43 @@ namespace MyCoreMVC_20220327.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(category);
+                _db.Categories.Update(category);
                 _db.SaveChanges();
+                TempData["success"] = "已修改";
                 return RedirectToAction("Index");
             }
             return View(category);
+        }
+        //刪除 GET
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var category = _db.Categories.Find(id);
+            //var categoryFirst = _db.Categories.FirstOrDefault(c => c.Id == id);
+            //var categorySingle = _db.Categories.SingleOrDefault(c => c.Id == id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return View(category);
+        }
+        //刪除 POST
+        [HttpPost,ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeletePost(int? id)
+        {
+            var obj = _db.Categories.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            _db.Categories.Remove(obj);
+            _db.SaveChanges();
+            TempData["success"] = "已刪除";
+            return RedirectToAction("Index");
         }
     }
 }
