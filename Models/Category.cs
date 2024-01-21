@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyCoreMVC.Models
+namespace Models
 {
     public class Category
     {
@@ -10,6 +10,7 @@ namespace MyCoreMVC.Models
 
         //[Display(Name = "名稱")]
         [DisplayName("類型名稱")]
+        [StringLength(50)]
         [Required(ErrorMessage = "此欄位必填")]
         public string Name { get; set; }
 
