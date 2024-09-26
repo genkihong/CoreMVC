@@ -1,11 +1,13 @@
-﻿using DataAccess.Repository.IRepository;
-using DataAcess.Data;
+﻿using DataAccess.Repository;
+using DataAccess.Repository.IRepository;
+using DataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
 
-namespace MyCoreMVC.Controllers
+namespace MyCoreMVC.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         //private readonly ApplicationDbContext _db;
@@ -13,10 +15,15 @@ namespace MyCoreMVC.Controllers
         //{
         //    _db = db;
         //}
-        private readonly ICategoryRepository _categoryRepository;
-        public CategoryController(ICategoryRepository db)
+        //private readonly ICategoryRepository _categoryRepository;
+        //public CategoryController(ICategoryRepository db)
+        //{
+        //    _categoryRepository = db; ;
+        //}
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _categoryRepository = db;
+            _unitOfWork = unitOfWork;
         }
         /// <summary>
         /// 取得全部資料
@@ -25,7 +32,8 @@ namespace MyCoreMVC.Controllers
         public IActionResult Index()
         {
             //IEnumerable<Category> categoryList = _db.Categories;
-            List<Category> categoryList = _categoryRepository.GetAll().ToList();
+            //List<Category> categoryList = _categoryRepository.GetAll().ToList();
+            List<Category> categoryList = _unitOfWork.Category.GetAll().ToList();
             return View(categoryList);
         }
         /// <summary>
@@ -36,7 +44,11 @@ namespace MyCoreMVC.Controllers
         {
             return View();
         }
-        //送出新增資料
+        /// <summary>
+        /// 送出新增資料
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Category category)
@@ -49,8 +61,10 @@ namespace MyCoreMVC.Controllers
             {
                 //_db.Categories.Add(category);
                 //_db.SaveChanges();
-                _categoryRepository.Add(category);
-                _categoryRepository.Save();
+                //_categoryRepository.Add(category);
+                //_categoryRepository.Save();
+                _unitOfWork.Category.Add(category);
+                _unitOfWork.Save();
                 TempData["success"] = "已新增";
                 return RedirectToAction("Index");
             }
@@ -70,7 +84,8 @@ namespace MyCoreMVC.Controllers
             //var category = _db.Categories.Find(id);
             //var categoryFirst = _db.Categories.FirstOrDefault(c => c.Id == id);
             //var categorySingle = _db.Categories.SingleOrDefault(c => c.Id == id);
-            Category category = _categoryRepository.Get(c => c.Id == id);
+            //Category category = _categoryRepository.Get(c => c.Id == id);
+            Category category = _unitOfWork.Category.Get(c => c.Id == id);
             if (category == null)
             {
                 return NotFound();
@@ -94,8 +109,10 @@ namespace MyCoreMVC.Controllers
             {
                 //_db.Categories.Update(category);
                 //_db.SaveChanges();
-                _categoryRepository.Update(category);
-                _categoryRepository.Save();
+                //_categoryRepository.Update(category);
+                //_categoryRepository.Save();
+                _unitOfWork.Category.Update(category);
+                _unitOfWork.Save();
                 TempData["success"] = "已修改";
                 return RedirectToAction("Index");
             }
@@ -115,7 +132,8 @@ namespace MyCoreMVC.Controllers
             //var category = _db.Categories.Find(id);
             //var categoryFirst = _db.Categories.FirstOrDefault(c => c.Id == id);
             //var categorySingle = _db.Categories.SingleOrDefault(c => c.Id == id);
-            Category category = _categoryRepository.Get(c => c.Id == id);
+            //Category category = _categoryRepository.Get(c => c.Id == id);
+            Category category = _unitOfWork.Category.Get(c => c.Id == id);
             if (category == null)
             {
                 return NotFound();
@@ -132,15 +150,18 @@ namespace MyCoreMVC.Controllers
         public IActionResult DeletePost(int? id)
         {
             //var obj = _db.Categories.Find(id);
-            Category category = _categoryRepository.Get(c => c.Id == id);
+            //Category category = _categoryRepository.Get(c => c.Id == id);
+            Category category = _unitOfWork.Category.Get(c => c.Id == id);
             if (category == null)
             {
                 return NotFound();
             }
             //_db.Categories.Remove(obj);
             //_db.SaveChanges();
-            _categoryRepository.Remove(category);
-            _categoryRepository.Save();
+            //_categoryRepository.Remove(category);
+            //_categoryRepository.Save();
+            _unitOfWork.Category.Remove(category);
+            _unitOfWork.Save();
             TempData["success"] = "已刪除";
             return RedirectToAction("Index");
         }

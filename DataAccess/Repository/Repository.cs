@@ -4,20 +4,24 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccess.Data;
 using DataAccess.Repository.IRepository;
-using DataAcess.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repository
 {
-    public class Repository<T> : IRepository<T> where T : class
+    /// <summary>
+    /// 泛型類別實作泛型介面
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+	public class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDbContext _db;
         internal DbSet<T> dbSet;
         public Repository(ApplicationDbContext db)
         {
             _db = db;
-            //等同於 _db.Categories
+            //_db.Categories == dbSet
             dbSet = _db.Set<T>();
         }
         /// <summary>
@@ -29,7 +33,7 @@ namespace DataAccess.Repository
             dbSet.Add(entity);
         }
         /// <summary>
-        /// 取得單一筆資料
+        /// 取得一筆資料
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
@@ -48,11 +52,11 @@ namespace DataAccess.Repository
             IQueryable<T> query = dbSet;
             return query.ToList();
         }
-        /// <summary>
-        /// 刪除一筆資料
-        /// </summary>
-        /// <param name="entity"></param>
-        public void Remove(T entity)
+		/// <summary>
+		/// 刪除一筆資料
+		/// </summary>
+		/// <param name="entity"></param>
+		public void Remove(T entity)
         {
             dbSet.Remove(entity);
         }

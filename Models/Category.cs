@@ -16,6 +16,7 @@ namespace Models
 
         [DisplayName("訂購數量")]
         [Required(ErrorMessage = "此欄位必填")]
+        [Range(1, 100, ErrorMessage = "必須介於1至100")]
         public int DisplayOrder { get; set; }
 
         public DateTime CreatedDate { get; set; }

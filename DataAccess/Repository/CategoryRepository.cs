@@ -1,5 +1,5 @@
-﻿using DataAccess.Repository.IRepository;
-using DataAcess.Data;
+﻿using DataAccess.Data;
+using DataAccess.Repository.IRepository;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -9,19 +9,12 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository
 {
-    public class CategoryRepository : Repository<Category>, ICategoryRepository
+	public class CategoryRepository : Repository<Category>, ICategoryRepository
     {
         private readonly ApplicationDbContext _db;
         public CategoryRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
-        }
-        /// <summary>
-        /// 寫入資料庫
-        /// </summary>
-        public void Save()
-        {
-            _db.SaveChanges();
         }
         /// <summary>
         /// 修改資料
