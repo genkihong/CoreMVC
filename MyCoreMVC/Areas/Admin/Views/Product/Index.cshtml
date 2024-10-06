@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Product>
+@{
+  ViewData["Title"] = "類型清單";
+}
+
+<div class="card shadow border-0 bg-body-tertiary my-4">
+  <div class="card-header bg-primary bg-gradient text-white text-center">
+    <h2 class="mb-0 py-2">Product List</h2>
+  </div>
+  <div class="card-body p-4">
+    <div class="row pb-3">
+      <div class="col-6">
+      </div>
+      <div class="col-6 text-end">
+        <a asp-controller="Product" asp-action="Upsert" class="btn btn-primary">
+          <i class="bi bi-plus-circle me-1"></i>新增
+        </a>
+      </div>
+    </div>
+    <table id="tblData" class="table table-hover">
+      <thead class="table-success">
+        <tr>
+          <th width="20%">Title</th>
+          <th width="15%">Author</th>
+          <th width="15%">Category</th>
+          <th class="text-center">PreviewImage</th>
+          <th width="10%">ISBN</th>
+          <th width="10%">Price</th>
+          <th width="15%"></th>
+        </tr>
+      </thead>
+      @*
+      <tbody>
+      @foreach (var item in Model)
+      {
+      <tr>
+      <td class="align-middle">
+      @Html.DisplayFor(modelItem => item.Title)
+      </td>
+      <td class="align-middle">
+      @Html.DisplayFor(modelItem => item.ISBN)
+      </td>
+      <td class="align-middle">
+      @Html.DisplayFor(modelItem => item.Price)
+      </td>
+      <td class="align-middle">
+      @Html.DisplayFor(modelItem => item.Author)
+      </td>
+      <td class="align-middle">
+      @Html.DisplayFor(modelItem => item.Category.Name)
+      </td>
+      <td class="text-center">
+      <img src="@item.ImageUrl" alt="@item.ImageUrl" width="100" />
+      </td>
+      <td class="align-middle text-end">
+      <a asp-controller="Product" asp-action="Upsert" asp-route-id="@item.Id" class="btn btn-sm btn-primary">
+      <i class="bi bi-pencil-square me-1"></i>編輯
+      </a>
+      <a asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+      <i class="bi bi-trash-fill me-1"></i>刪除
+      </a>
+      </td>
+      </tr>
+      }
+      </tbody>
+      *@
+    </table>
+  </div>
+</div>
+
+@section Scripts {
+  <script src="~/lib/datatable/js/datatables.min.js"></script>
+  <script src="~/js/product.js" asp-append-version="true"></script>
+}

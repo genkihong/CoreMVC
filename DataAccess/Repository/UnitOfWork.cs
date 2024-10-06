@@ -8,21 +8,25 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository
 {
-	public class UnitOfWork : IUnitOfWork
+  public class UnitOfWork : IUnitOfWork
+  {
+    private readonly ApplicationDbContext _db;
+    public ICategoryRepository Category { get; private set; }
+    public IProductRepository Product { get; private set; }
+    public IProductImageRepository ProductImage { get; private set; }
+    public UnitOfWork(ApplicationDbContext db)
     {
-        private readonly ApplicationDbContext _db;
-        public ICategoryRepository Category { get; private set; }
-        public UnitOfWork(ApplicationDbContext db)
-        {
-            _db = db;
-            Category = new CategoryRepository(_db);
-        }
-        /// <summary>
-        /// 寫入資料庫
-        /// </summary>
-        public void Save()
-        {
-            _db.SaveChanges();
-        }
+      _db = db;
+      Category = new CategoryRepository(_db);
+      Product = new ProductRepository(_db);
+      ProductImage = new ProductImageRepository(_db);
     }
+    /// <summary>
+    /// 寫入資料庫
+    /// </summary>
+    public void Save()
+    {
+      _db.SaveChanges();
+    }
+  }
 }

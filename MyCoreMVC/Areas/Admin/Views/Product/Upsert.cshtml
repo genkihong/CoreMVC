@@ -1,0 +1,141 @@
+﻿@model ProductViewModel
+
+<div class="card shadow border-0 bg-body-tertiary mt-4">
+  <div class="card-header bg-primary bg-gradient ml-0 py-3">
+    <div class="row">
+      <div class="col-12 text-center">
+        <h2 class="text-white py-2 mb-0">
+          @(Model.Product.Id == 0 ? "新增" : "編輯")產品
+        </h2>
+      </div>
+    </div>
+  </div>
+  <div class="card-body p-4">
+    <form method="post" class="row" enctype="multipart/form-data">
+      <input asp-for="Product.Id" type="hidden" />
+      <input asp-for="Product.ImageUrl" type="hidden" />
+      <div class="border p-3">
+        @*<div asp-validation-summary="ModelOnly"></div>*@
+        @* 名稱 *@
+        <div class="py-2 col-12">
+          <label asp-for="Product.Title" class="mb-2"></label>
+          <input asp-for="Product.Title" class="form-control border-0 shadow" />
+          <span asp-validation-for="Product.Title" class="text-danger"></span>
+        </div>
+        @* 描述 *@
+        <div class="py-2 col-12">
+          <label asp-for="Product.Description" class="mb-2"></label>
+          @* <div id="edit">
+          @Html.Raw(Model.Product.Description)
+          </div> *@
+          <textarea asp-for="Product.Description" class="form-control border-0 shadow"></textarea>
+          <span asp-validation-for="Product.Description" class="text-danger"></span>
+        </div>
+        @* 編號 *@
+        <div class="py-2 col-12">
+          <label asp-for="Product.ISBN" class="mb-2"></label>
+          <input asp-for="Product.ISBN" class="form-control border-0 shadow" />
+          <span asp-validation-for="Product.ISBN" class="text-danger"></span>
+        </div>
+        @* 作者 *@
+        <div class="py-2 col-12">
+          <label asp-for="Product.Author" class="mb-2"></label>
+          <input asp-for="Product.Author" class="form-control border-0 shadow" />
+          <span asp-validation-for="Product.Author" class="text-danger"></span>
+        </div>
+        @* 價格 *@
+        <div class="py-2 col-12">
+          <label asp-for="Product.ListPrice" class="mb-2"></label>
+          <input asp-for="Product.ListPrice" class="form-control border-0 shadow" />
+          <span asp-validation-for="Product.ListPrice" class="text-danger"></span>
+        </div>
+        @* 價格 *@
+        <div class="py-2 col-12">
+          <label asp-for="Product.Price" class="mb-2"></label>
+          <input asp-for="Product.Price" class="form-control border-0 shadow" />
+          <span asp-validation-for="Product.Price" class="text-danger"></span>
+        </div>
+        @* 價格50 *@
+        <div class="py-2 col-12">
+          <label asp-for="Product.Price50" class="mb-2"></label>
+          <input asp-for="Product.Price50" class="form-control border-0 shadow" />
+          <span asp-validation-for="Product.Price50" class="text-danger"></span>
+        </div>
+        @* 價格100 *@
+        <div class="py-2 col-12">
+          <label asp-for="Product.Price100" class="mb-2"></label>
+          <input asp-for="Product.Price100" class="form-control border-0 shadow" />
+          <span asp-validation-for="Product.Price100" class="text-danger"></span>
+        </div>
+        @* 產品類別 *@
+        <div class="py-2 col-12">
+          <label asp-for="Product.CategoryId" class="mb-2"></label>
+          <select asp-for="Product.CategoryId" asp-items="@Model.CategoryList" class="form-select border-0 shadow">
+            <option disabled selected>--Select Category--</option>
+          </select>
+          @* <span asp-validation-for="Product.CategoryId" class="text-danger"></span> *@
+        </div>
+        @* 上傳圖片 *@
+        <div class="py-2 col-12">
+          <div class="row">
+            <div class="col-10">
+              <label for="uploadImage" class="mb-2">上傳圖片</label>
+              <input type="file" name="uploadImage" id="uploadImage" class="form-control border-0 shadow" />
+              <span asp-validation-for="Product.ImageUrl" class="text-danger"></span>
+            </div>
+            <div class="col-2 text-center">
+              @if (Model.Product.Id == 0)
+              {
+                <div class="border border-2 text-muted">
+                  <i class="bi bi-image" style="font-size: 5rem;"></i>
+                </div>
+                <img src="" alt="" class="img-thumbnail d-none" id="prevImage" />
+              }
+              else
+              {
+                <div class="border border-2 text-muted">
+                  <i class="bi bi-image d-none" style="font-size: 5rem;"></i>
+                </div>
+                <img src="@Model.Product.ImageUrl" alt="@Model.Product.ImageUrl" class="img-thumbnail" id="prevImage" />
+              }
+            </div>
+          </div>
+        </div>
+        <div class="row pt-2">
+          <div class="col-6 col-md-3">
+            @if (Model.Product.Id == 0)
+            {
+              <button type="submit" class="btn btn-primary form-control">新增</button>
+            }
+            else
+            {
+              <button type="submit" class="btn btn-primary form-control">修改</button>
+            }
+          </div>
+          <div class="col-6 col-md-3">
+            <a asp-controller="Product" asp-action="Index" class="btn btn-outline-primary border form-control">
+              Back to List
+            </a>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+@*client side validation*@
+@section Scripts {
+  @{
+    <script type="importmap">
+      {
+          "imports": {
+              "ckeditor5": "../../../lib/ckeditor5/ckeditor5.js",
+              "ckeditor5/": "../../../lib/ckeditor5/"
+          }
+      }
+    </script>
+    <script type="module" src="~/lib/ckeditor5/main.js" asp-append-version="true"></script>
+    <script src="~/js/upsert.js" asp-append-version="true"></script>
+    // <partial name="_ValidationScriptsPartial" />
+  }
+}

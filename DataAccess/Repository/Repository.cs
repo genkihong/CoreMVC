@@ -10,64 +10,85 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repository
 {
-    /// <summary>
-    /// 泛型類別實作泛型介面
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-	public class Repository<T> : IRepository<T> where T : class
+  /// <summary>
+  /// 泛型類別實作泛型介面
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
+  public class Repository<T> : IRepository<T> where T : class
+  {
+    private readonly ApplicationDbContext _db;
+    internal DbSet<T> dbSet;
+    public Repository(ApplicationDbContext db)
     {
-        private readonly ApplicationDbContext _db;
-        internal DbSet<T> dbSet;
-        public Repository(ApplicationDbContext db)
-        {
-            _db = db;
-            //_db.Categories == dbSet
-            dbSet = _db.Set<T>();
-        }
-        /// <summary>
-        /// 新增資料
-        /// </summary>
-        /// <param name="entity"></param>
-        public void Add(T entity)
-        {
-            dbSet.Add(entity);
-        }
-        /// <summary>
-        /// 取得一筆資料
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        public T Get(Expression<Func<T, bool>> filter)
-        {
-            IQueryable<T> query = dbSet;
-            query = query.Where(filter);
-            return query.FirstOrDefault();
-        }
-        /// <summary>
-        /// 取得全部資料
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<T> GetAll()
-        {
-            IQueryable<T> query = dbSet;
-            return query.ToList();
-        }
-		/// <summary>
-		/// 刪除一筆資料
-		/// </summary>
-		/// <param name="entity"></param>
-		public void Remove(T entity)
-        {
-            dbSet.Remove(entity);
-        }
-        /// <summary>
-        /// 刪除全部資料
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void RemoveRange(IEnumerable<T> entities)
-        {
-            dbSet.RemoveRange(entities);
-        }
+      _db = db;
+      //_db.Categories == dbSet
+      dbSet = _db.Set<T>();
+      _db.Products.Include(p => p.Category);
     }
+    /// <summary>
+    /// 新增資料
+    /// </summary>
+    /// <param name="entity"></param>
+    public void Add(T entity)
+    {
+      dbSet.Add(entity);
+    }
+    /// <summary>
+    /// 取得全部資料
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<T> GetAll(string? includeProperties = null)
+    {
+      IQueryable<T> query = dbSet;
+
+      if (!string.IsNullOrEmpty(includeProperties))
+      {
+        foreach (var includeProp in includeProperties
+            .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+          query = query.Include(includeProp);
+        }
+      }
+
+      return query.ToList();
+    }
+    /// <summary>
+    /// 取得一筆資料
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
+    {
+      IQueryable<T> query = dbSet;
+      query = query.Where(filter);
+
+      if (!string.IsNullOrEmpty(includeProperties))
+      {
+        foreach (var includeProp in includeProperties
+            .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+          query = query.Include(includeProp);
+        }
+      }
+
+      return query.FirstOrDefault();
+    }
+    /// <summary>
+    /// 刪除一筆資料
+    /// </summary>
+    /// <param name="entity"></param>
+    public void Remove(T entity)
+    {
+      dbSet.Remove(entity);
+    }
+    /// <summary>
+    /// 刪除全部資料
+    /// </summary>
+    /// <param name="entities"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    public void RemoveRange(IEnumerable<T> entities)
+    {
+      dbSet.RemoveRange(entities);
+    }
+  }
 }

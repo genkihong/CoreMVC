@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository.IRepository
 {
-    public interface IUnitOfWork
-    {
-        ICategoryRepository Category { get; }
-        void Save();
-    }
+  public interface IUnitOfWork
+  {
+    ICategoryRepository Category { get; }
+    IProductRepository Product { get; }
+    IProductImageRepository ProductImage { get; }
+    void Save();
+  }
 }
