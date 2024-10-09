@@ -3,11 +3,14 @@ using DataAccess.Repository.IRepository;
 using DataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Microsoft.AspNetCore.Authorization;
+using Utility;
 
 
 namespace MyCoreMVC.Areas.Admin.Controllers
 {
   [Area("Admin")]
+  [Authorize(Roles = SD.Role_Admin)]
   public class CategoryController : Controller
   {
     //private readonly ApplicationDbContext _db;
@@ -57,6 +60,7 @@ namespace MyCoreMVC.Areas.Admin.Controllers
       {
         ModelState.AddModelError("name", "名稱和數量相同!");
       }
+
       if (ModelState.IsValid)
       {
         //_db.Categories.Add(product);

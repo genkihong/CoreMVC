@@ -12,22 +12,37 @@
         url: '../lib/datatable/zh-HANT.json'
       },
       columns: [
-        { data: 'title', className: 'align-middle' },
-        { data: 'author', className: 'align-middle' },
-        { data: 'category.name', className: 'align-middle' },
+        {
+          data: 'title',
+          className: 'align-middle'
+        },
+        {
+          data: 'author',
+          className: 'align-middle'
+        },
+        {
+          data: 'category.name',
+          className: 'align-middle'
+        },
         {
           data: 'imageUrl',
           className: 'text-center',
-          render: function (data) {
-            return `<img src="${data}" alt="${data}" width="100" />`
+          render(data) {
+            return `<img src="/images/product/${data}" alt="${data}" width="100" />`
           }
         },
-        { data: 'isbn', className: 'align-middle' },
-        { data: 'listPrice', className: 'align-middle' },
+        {
+          data: 'isbn',
+          className: 'align-middle'
+        },
+        {
+          data: 'listPrice',
+          className: 'align-middle'
+        },
         {
           data: 'id',
           className: 'align-middle text-end',
-          render: function (data) {
+          render(data) {
             return ` <a href="/admin/product/upsert?id=${data}" class="btn btn-sm btn-primary">
                         <i class="bi bi-pencil-square me-1"></i>編輯
                      </a>
@@ -58,7 +73,7 @@
         confirmButtonText: 'Yes, delete it!'
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const res = await fetch(`/admin/product/deleteproduct/${id}`, { method: 'DELETE' });
+          const res = await fetch(`/admin/product/delete/${id}`, { method: 'DELETE' });
           const result = await res.json()
           dataTable.ajax.reload();
           toastr.success(result.message);

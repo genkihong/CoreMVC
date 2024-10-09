@@ -8,10 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Models.ViewModel;
 using System.IO;
 using System;
+using Microsoft.AspNetCore.Authorization;
+using Utility;
 
 namespace MyCoreMVC.Areas.Admin.Controllers
 {
   [Area("Admin")]
+  [Authorize(Roles = SD.Role_Admin)]
   public class ProductController : Controller
   {
     private readonly IUnitOfWork _unitOfWork;
@@ -28,8 +31,8 @@ namespace MyCoreMVC.Areas.Admin.Controllers
     public IActionResult Index()
     {
       // 具名引數 https://learn.microsoft.com/zh-tw/dotnet/csharp/programming-guide/classes-and-structs/named-and-optional-arguments
-      List<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
-      return View(productList);
+      // List<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
+      return View();
     }
     /// <summary>
     /// 新增/修改 Get
@@ -63,32 +66,36 @@ namespace MyCoreMVC.Areas.Admin.Controllers
     /// <returns></returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Upsert(ProductViewModel productViewModel, IFormFile? uploadImage)
+    public async Task<IActionResult> Upsert(ProductViewModel productViewModel)
     {
       ModelState.Remove("CategoryList");
-      ModelState.Remove("Product.ImageUrl");
+      ModelState.Remove("Product.Image");
 
       if (ModelState.IsValid)
       {
         // 上傳圖片
-        if (uploadImage != null)
+        if (productViewModel.Product.Image != null)
         {
           // wwwroot path
-          string rootPath = _webHostEnvironment.WebRootPath;
-          string filePath = Path.Combine(rootPath, @"images\product");// wwwroot\images\product\
+          string rootPath = Directory.GetCurrentDirectory();// D:\Core MVC\MyCoreMVC\MyCoreMVC
+          string filePath = Path.Combine(rootPath, "wwwroot/images/product");// D:\Core MVC\MyCoreMVC\MyCoreMVC\wwwroot/images/product
+          //string rootPath = _webHostEnvironment.WebRootPath;
+          //string filePath = Path.Combine(rootPath, @"images\product");// wwwroot\images\product
+
           // 上傳檔案為圖片格式
-          var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
+          var allowedExtensions = new string[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
           // 取得圖片副檔名
-          var fileExtension = Path.GetExtension(uploadImage.FileName).ToLower();
+          var fileExtension = Path.GetExtension(productViewModel.Product.Image.FileName).ToLower();
 
           // 驗證圖片格式
           if (!allowedExtensions.Contains(fileExtension))
           {
-            throw new InvalidOperationException($"只能上傳{string.Join(",", allowedExtensions)}");
+            ModelState.AddModelError("Image", "僅允許上傳圖片格式 (jpg, jpeg, png, gif, bmp)。");
+            return View(productViewModel);// 回到表單顯示錯誤訊息
           }
 
           // 圖片檔名 = Guid + 副檔名
-          string fileName = Guid.NewGuid().ToString() + fileExtension;
+          string fileName = Guid.NewGuid().ToString() + fileExtension;// 356944f2-34ea-4d0c-9fef-81323c762682.jpg
           // 上傳圖片路徑
           string uploadPath = Path.Combine(filePath, fileName);
 
@@ -96,7 +103,8 @@ namespace MyCoreMVC.Areas.Admin.Controllers
           if (!string.IsNullOrEmpty(productViewModel.Product.ImageUrl))
           {
             // 已存在的圖片路徑
-            string oldImagePath = Path.Combine(rootPath, productViewModel.Product.ImageUrl.TrimStart('\\'));
+            string oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/product", productViewModel.Product.ImageUrl);
+            //string oldImagePath = Path.Combine(rootPath, productViewModel.Product.ImageUrl.TrimStart('\\'));
 
             if (System.IO.File.Exists(oldImagePath))
             {
@@ -108,10 +116,11 @@ namespace MyCoreMVC.Areas.Admin.Controllers
           // 上傳圖片至 wwwroot/images/product
           using (var fileStream = new FileStream(uploadPath, FileMode.Create))
           {
-            await uploadImage.CopyToAsync(fileStream);
+            await productViewModel.Product.Image.CopyToAsync(fileStream);
           }
           // 儲存圖片路徑
-          productViewModel.Product.ImageUrl = $@"\images\product\{fileName}";
+          productViewModel.Product.ImageUrl = fileName;
+          //productViewModel.Product.ImageUrl = $@"\images\product\{fileName}";
         }
 
         if (productViewModel.Product.Id == 0)
@@ -130,12 +139,14 @@ namespace MyCoreMVC.Areas.Admin.Controllers
         _unitOfWork.Save();
         return RedirectToAction("Index");
       }
+
       //驗證失敗時，下拉選單
       productViewModel.CategoryList = _unitOfWork.Category.GetAll().Select(c => new SelectListItem
       {
         Text = c.Name,
         Value = c.Id.ToString()
       });
+
       return View(productViewModel);
     }
     /// <summary>
@@ -233,7 +244,7 @@ namespace MyCoreMVC.Areas.Admin.Controllers
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public IActionResult Delete(int? id)
+    public IActionResult DeleteGet(int? id)
     {
       if (id == null || id == 0)
       {
@@ -277,9 +288,7 @@ namespace MyCoreMVC.Areas.Admin.Controllers
     [HttpGet]
     public IActionResult GetAll()
     {
-      List<Product> productList = _unitOfWork.Product
-                                  .GetAll(includeProperties: "Category")
-                                  .ToList();
+      List<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
       return Json(new
       {
         data = productList
@@ -291,7 +300,7 @@ namespace MyCoreMVC.Areas.Admin.Controllers
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete]
-    public IActionResult DeleteProduct(int? id)
+    public IActionResult Delete(int? id)
     {
       if (!id.HasValue)
       {
@@ -314,8 +323,8 @@ namespace MyCoreMVC.Areas.Admin.Controllers
       }
 
       // 已存在的圖片路徑
-      //var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/product", product.ImageUrl);
-      string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));
+      string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/product", product.ImageUrl);
+      //string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));
 
       if (System.IO.File.Exists(imagePath))
       {

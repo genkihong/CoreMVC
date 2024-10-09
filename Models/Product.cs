@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
 //using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Models
@@ -28,42 +29,47 @@ namespace Models
     public string ISBN { get; set; }
 
     [Required(ErrorMessage = "{0}必填")]
-    [Display(Name = "作者")]
+    [Display(Name = "建立者")]
     public string Author { get; set; }
 
     [Required(ErrorMessage = "{0}必填")]
-    [Display(Name = "List Price")]
     [Range(1, 1000)]
+    [Display(Name = "價格")]
     public double ListPrice { get; set; }
 
     [Required(ErrorMessage = "{0}必填")]
-    [Display(Name = "Price for 1-50")]
     [Range(1, 1000)]
+    [Display(Name = "價格 1-50")]
     public double Price { get; set; }
 
     [Required(ErrorMessage = "{0}必填")]
-    [Display(Name = "Price for 50+")]
     [Range(1, 1000)]
+    [Display(Name = "價格 50+")]
     public double Price50 { get; set; }
 
     [Required(ErrorMessage = "{0}必填")]
-    [Display(Name = "Price for 100+")]
+    [Display(Name = "價格 100+")]
     [Range(1, 1000)]
     public double Price100 { get; set; }
 
     [Required(ErrorMessage = "{0}必填")]
-    [Display(Name = "產品類別")]
+    [Display(Name = "商品類別")]
     public int CategoryId { get; set; }
 
     [ForeignKey("CategoryId")]
-    //[ValidateNever]
     public Category? Category { get; set; }
 
+    [Display(Name = "圖片")]
     [DataType(DataType.ImageUrl)]
-    [Display(Name = "圖片連結")]
-    public string ImageUrl { get; set; }
+    [RegularExpression(@".*\.(jpg|jpeg|png|gif|bmp)$", ErrorMessage = "僅允許上傳圖片格式 (jpg, jpeg, png, gif, bmp)。")]
+    [NotMapped]
+    public IFormFile? Image { get; set; }
 
-    //[ValidateNever]
+    [MaxLength(100)]
+    [Display(Name = "圖片連結")]
+    public string? ImageUrl { get; set; }
+
+    
     //public ICollection<ProductImage> ProductImages { get; set; }
   }
 }

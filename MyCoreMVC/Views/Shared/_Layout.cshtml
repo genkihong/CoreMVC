@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>@ViewData["Title"] - MyCoreMVC</title>
+  <title>@ViewData["Title"]</title>
   <link rel="stylesheet" href="~/lib/bootswatch/css/bootstrap.css" />
   <link rel="stylesheet" href="~/lib/bootstrap-icons/bootstrap-icons.css" />
   @*Toastr*@
@@ -20,7 +20,7 @@
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="#">Coffee Shop</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -30,22 +30,25 @@
             <li class="nav-item">
               <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Cotent Managment
-              </a>
-              <ul class="dropdown-menu">
-                <li>
-                  <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
-                </li>
-                @* <li>
-                  <hr class="dropdown-divider">
+            @if (User.IsInRole(SD.Role_Admin))
+            {
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Cotent Managment
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
+                  </li>
+                  @* <li>
+                <hr class="dropdown-divider">
                 </li> *@
-              </ul>
-            </li>
+                </ul>
+              </li>
+            }
           </ul>
           <partial name="_LoginPartial" />
           @* <form class="d-flex">
@@ -56,8 +59,8 @@
       </div>
     </nav>
   </header>
-  <div class="container">
-    <main role="main" class="pb-3">
+  <div class="container py-4">
+    <main role="main">
       <partial name="_Notification" />
       @RenderBody()
     </main>
@@ -65,7 +68,7 @@
 
   <footer class="footer bg-primary-subtle text-muted p-3">
     <div class="container">
-      &copy; 2024 - MyCoreMVC<a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+      &copy; 2024 - Charles<a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
   </footer>
 

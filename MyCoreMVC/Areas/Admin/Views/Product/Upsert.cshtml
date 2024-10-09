@@ -1,14 +1,13 @@
 ﻿@model ProductViewModel
+@{
+  ViewData["Title"] = $"{(Model.Product.Id == 0 ? "新增" : "編輯")}商品";
+}
 
 <div class="card shadow border-0 bg-body-tertiary mt-4">
-  <div class="card-header bg-primary bg-gradient ml-0 py-3">
-    <div class="row">
-      <div class="col-12 text-center">
-        <h2 class="text-white py-2 mb-0">
-          @(Model.Product.Id == 0 ? "新增" : "編輯")產品
-        </h2>
-      </div>
-    </div>
+  <div class="card-header bg-primary bg-gradient">
+    <h2 class="text-white text-center mb-0">
+      @(Model.Product.Id == 0 ? "新增" : "編輯")商品
+    </h2>
   </div>
   <div class="card-body p-4">
     <form method="post" class="row" enctype="multipart/form-data">
@@ -37,7 +36,7 @@
           <input asp-for="Product.ISBN" class="form-control border-0 shadow" />
           <span asp-validation-for="Product.ISBN" class="text-danger"></span>
         </div>
-        @* 作者 *@
+        @* 建立者 *@
         <div class="py-2 col-12">
           <label asp-for="Product.Author" class="mb-2"></label>
           <input asp-for="Product.Author" class="form-control border-0 shadow" />
@@ -49,25 +48,25 @@
           <input asp-for="Product.ListPrice" class="form-control border-0 shadow" />
           <span asp-validation-for="Product.ListPrice" class="text-danger"></span>
         </div>
-        @* 價格 *@
+        @* 價格(0-50) *@
         <div class="py-2 col-12">
           <label asp-for="Product.Price" class="mb-2"></label>
           <input asp-for="Product.Price" class="form-control border-0 shadow" />
           <span asp-validation-for="Product.Price" class="text-danger"></span>
         </div>
-        @* 價格50 *@
+        @* 價格(51-100) *@
         <div class="py-2 col-12">
           <label asp-for="Product.Price50" class="mb-2"></label>
           <input asp-for="Product.Price50" class="form-control border-0 shadow" />
           <span asp-validation-for="Product.Price50" class="text-danger"></span>
         </div>
-        @* 價格100 *@
+        @* 價格100+ *@
         <div class="py-2 col-12">
           <label asp-for="Product.Price100" class="mb-2"></label>
           <input asp-for="Product.Price100" class="form-control border-0 shadow" />
           <span asp-validation-for="Product.Price100" class="text-danger"></span>
         </div>
-        @* 產品類別 *@
+        @* 商品類別 *@
         <div class="py-2 col-12">
           <label asp-for="Product.CategoryId" class="mb-2"></label>
           <select asp-for="Product.CategoryId" asp-items="@Model.CategoryList" class="form-select border-0 shadow">
@@ -79,9 +78,11 @@
         <div class="py-2 col-12">
           <div class="row">
             <div class="col-10">
-              <label for="uploadImage" class="mb-2">上傳圖片</label>
-              <input type="file" name="uploadImage" id="uploadImage" class="form-control border-0 shadow" />
-              <span asp-validation-for="Product.ImageUrl" class="text-danger"></span>
+              <label asp-for="Product.Image" class="mb-2">上傳圖片</label>
+              <input asp-for="Product.Image" class="form-control border-0 shadow" />
+              <span asp-validation-for="Product.Image" class="text-danger"></span>
+              @* <label for="uploadImage" class="mb-2">上傳圖片</label> *@
+              @* <input type="file" name="uploadImage" id="uploadImage" class="form-control border-0 shadow" /> *@
             </div>
             <div class="col-2 text-center">
               @if (Model.Product.Id == 0)
@@ -96,7 +97,7 @@
                 <div class="border border-2 text-muted">
                   <i class="bi bi-image d-none" style="font-size: 5rem;"></i>
                 </div>
-                <img src="@Model.Product.ImageUrl" alt="@Model.Product.ImageUrl" class="img-thumbnail" id="prevImage" />
+                <img src="/images/product/@Model.Product.ImageUrl" alt="@Model.Product.ImageUrl" class="img-thumbnail" id="prevImage" />
               }
             </div>
           </div>

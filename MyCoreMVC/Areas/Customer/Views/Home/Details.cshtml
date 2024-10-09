@@ -3,22 +3,22 @@
 
 <form method="post">
   @* <input hidden asp-for="Id" /> *@
-  <div class="card shadow border-0 my-4">
-    <div class="card-header bg-primary bg-gradient text-white text-center">
+  <div class="card shadow border-0">
+    <div class="card-header bg-warning bg-gradient text-white text-center">
       <h3 class="text-uppercase">@Model.Title</h3>
       <p class="fw-semibold mb-0">by @Model.Author</p>
     </div>
-    <div class="card-body bg-body-secondary py-3">
+    <div class="card-body bg-light py-3">
       <div class="row">
         <div class="col-6 col-md-2 mb-5">
-          <a asp-action="Index" class="btn btn-outline-primary bg-gradient fw-semibold btn-sm text-uppercase">
+          <a asp-action="Index" class="btn btn-outline-warning bg-gradient fw-semibold btn-sm text-uppercase">
             <small>Back to home</small>
           </a>
         </div>
       </div>
       <div class="row">
         <div class="col-12 col-lg-5">
-          <img src="@Model.ImageUrl" alt="@Model.ImageUrl" class="img-thumbnail" style="min-height: 382px" />
+          <img src="/images/product/@Model.ImageUrl" alt="@Model.ImageUrl" class="img-thumbnail" style="min-height: 382px" />
         </div>
         <div class="col-12 col-lg-7">
           <div class="mb-3">
@@ -63,14 +63,14 @@
             </div>
           </div>
 
-          <div class="lh-sm">
+          <div class="lh-sm" style="min-height: 75px">
             @Html.Raw(Model.Description)
           </div>
 
           <div class="row mb-3">
             <div class="col-md-4">
               <div class="input-group">
-                <span class="input-group-text bg-primary text-white border-0 fw-semibold" id="inputGroup-sizing-default">
+                <span class="input-group-text bg-warning text-white border-0 fw-semibold" id="inputGroup-sizing-default">
                   Count
                 </span>
                 <input type="number" value="1" class="form-control text-end" aria-label="Sizing example input"
@@ -79,11 +79,11 @@
             </div>
           </div>
           @* <div class="d-grid gap-2">
-          <button type="submit" class="btn btn-lg btn-primary bg-gradient text-uppercase fw-semibold">Add to Cart</button>
+          <button type="submit" class="btn btn-lg btn-warning bg-gradient text-uppercase fw-semibold">Add to Cart</button>
           </div> *@
           <div class="row">
             <div class="col-12 col-md-6">
-              <button type="submit" class="btn btn-primary bg-gradient w-100 text-uppercase fw-semibold">
+              <button type="submit" class="btn btn-warning bg-gradient w-100 text-uppercase fw-semibold">
                 Add to Cart
               </button>
             </div>
@@ -109,7 +109,7 @@
       <div class="py-3">
         <div class="row">
           <div class="col-6 col-md-2 offset-lg-1 pb-1">
-            <a asp-action="Index" class="btn btn-outline-primary bg-gradient mb-5 fw-semibold btn-sm text-uppercase">
+            <a asp-action="Index" class="btn btn-outline-warning bg-gradient mb-5 fw-semibold btn-sm text-uppercase">
               <small>Back to home</small>
             </a>
           </div>
@@ -202,7 +202,7 @@
             <div class="row pl-2 mb-3">
               <div class="col-md-4">
                 <div class="input-group mb-3">
-                  <span class="input-group-text bg-primary text-white border-0 fw-semibold"
+                  <span class="input-group-text bg-warning text-white border-0 fw-semibold"
                         id="inputGroup-sizing-default">
                     Count
                   </span>
@@ -214,7 +214,7 @@
             <div class="row">
               <div class="col-12 col-md-6 pb-1">
                 <button type="submit"
-                        class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">
+                        class="btn btn-warning bg-gradient  w-100 py-2 text-uppercase fw-semibold">
                   Add to Cart
                 </button>
               </div>

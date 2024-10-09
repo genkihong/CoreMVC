@@ -18,5 +18,14 @@ body {
 }
 
 main {
-    min-height: calc(100vh - 123px);
+  min-height: calc(100vh - 123px);
+}
+
+.divider::before, .divider::after {
+  content: "";
+  color: white;
+  flex: 1;
+  border-bottom: 1px solid #555;
+  margin: auto .25rem;
+  box-shadow: 0 -2px;
 }

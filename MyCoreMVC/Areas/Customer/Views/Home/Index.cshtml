@@ -1,21 +1,21 @@
 ﻿@model IEnumerable<Product>
 
-<div class="row py-3">
+<div class="row mt-4">
   @foreach (var product in Model)
   {
-    <div class="col-lg-4 col-sm-6">
-      <div class="card border-0 p-3 shadow-lg  border-top border-5 rounded">
-        <img src="@product.ImageUrl" class="card-img-top" style="min-height: 205px" />
+    <div class="col-lg-4 col-sm-6 mb-3">
+      <div class="card border-0 shadow border-top border-5 rounded p-1">
+        <img src="/images/product/@product.ImageUrl" class="card-img-top" style="min-height: 205px" />
         @* @if (product.ProductImages != null && product.ProductImages.Count() > 0)
-        {
-        <img src="@product.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top rounded" />
-        }
-        else
-        {
-        <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
-        } *@
+      {
+      <img src="@product.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top rounded" />
+      }
+      else
+      {
+      <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
+      } *@
 
-        <div class="card-body pb-0">
+        <div class="card-body bg-light pb-0">
           <div class="text-center">
             <h4 class="card-title text-dark opacity-75">@product.Title</h4>
             @* <p class="card-title text-warning text-center">by <b>@product.Author</b></p> *@
@@ -38,10 +38,11 @@
           </div>
         </div>
         <div>
-          <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary bg-gradient border-0 form-control">
+          <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary bg-gradient border-0 rounded-0 w-100">
             Details
           </a>
         </div>
       </div>
     </div>
   }
+</div>

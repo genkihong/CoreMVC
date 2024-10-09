@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<Product>
 @{
-  ViewData["Title"] = "類型清單";
+  ViewData["Title"] = "商品列表";
 }
 
-<div class="card shadow border-0 bg-body-tertiary my-4">
-  <div class="card-header bg-primary bg-gradient text-white text-center">
-    <h2 class="mb-0 py-2">Product List</h2>
+<div class="card shadow border-0 bg-body-tertiary mt-4">
+  <div class="card-header bg-primary bg-gradient">
+    <h2 class="text-white text-center mb-0">商品列表</h2>
   </div>
-  <div class="card-body p-4">
-    <div class="row pb-3">
+  <div class="card-body">
+    <div class="row mb-3">
       <div class="col-6">
       </div>
       <div class="col-6 text-end">
@@ -20,12 +20,12 @@
     <table id="tblData" class="table table-hover">
       <thead class="table-success">
         <tr>
-          <th width="20%">Title</th>
-          <th width="15%">Author</th>
-          <th width="15%">Category</th>
-          <th class="text-center">PreviewImage</th>
-          <th width="10%">ISBN</th>
-          <th width="10%">Price</th>
+          <th width="20%">名稱</th>
+          <th width="15%">建立者</th>
+          <th width="15%">類別</th>
+          <th class="text-center">圖片</th>
+          <th width="10%">型號</th>
+          <th width="10%">價格</th>
           <th width="15%"></th>
         </tr>
       </thead>
