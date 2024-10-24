@@ -56,7 +56,7 @@
   }
   // 刪除產品
   const deleteProduct = () => {
-    $(document).on("click", ".delete-product", function (e) {
+    $(document).on('click', '.delete-product', function (e) {
       e.preventDefault();
       //console.log($(this).data('id'))
       //console.log(this.getAttribute('data-id'))
@@ -65,7 +65,7 @@
 
       Swal.fire({
         title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        text: 'You won\'t be able to revert this!',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -74,7 +74,7 @@
       }).then(async (result) => {
         if (result.isConfirmed) {
           const res = await fetch(`/admin/product/delete/${id}`, { method: 'DELETE' });
-          const result = await res.json()
+          const result = await res.json();
           dataTable.ajax.reload();
           toastr.success(result.message);
         }

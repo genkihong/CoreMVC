@@ -37,14 +37,21 @@ namespace DataAccess.Repository
     /// 取得全部資料
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<T> GetAll(string? includeProperties = null)
+    public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
     {
       IQueryable<T> query = dbSet;
 
+      if (filter != null)
+      {
+        query = query.Where(filter);
+      }
+
       if (!string.IsNullOrEmpty(includeProperties))
       {
-        foreach (var includeProp in includeProperties
-            .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+        // 以字元','做為分隔符號切割字串，StringSplitOptions.RemoveEmptyEntries 為不回傳空字串
+        string[] properties = includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+        
+        foreach (var includeProp in properties )
         {
           query = query.Include(includeProp);
         }
@@ -57,15 +64,24 @@ namespace DataAccess.Repository
     /// </summary>
     /// <param name="filter"></param>
     /// <returns></returns>
-    public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
+    public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
     {
-      IQueryable<T> query = dbSet;
+      IQueryable<T> query;
+
+      if (tracked)
+      {
+        query = dbSet;
+      }
+      else
+      {
+        query = dbSet.AsNoTracking();
+      }
+
       query = query.Where(filter);
 
       if (!string.IsNullOrEmpty(includeProperties))
       {
-        foreach (var includeProp in includeProperties
-            .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+        foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
         {
           query = query.Include(includeProp);
         }

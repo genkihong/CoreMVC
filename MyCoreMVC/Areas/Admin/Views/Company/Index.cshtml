@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Company>
+@{
+  ViewData["Title"] = "公司列表";
+}
+
+<div class="card shadow border-0 bg-body-tertiary mt-4">
+  <div class="card-header bg-primary bg-gradient">
+    <h2 class="text-white text-center mb-0">公司列表</h2>
+  </div>
+  <div class="card-body">
+    <div class="text-end mb-3">
+      <a asp-controller="Company" asp-action="Upsert" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i>新增
+      </a>
+    </div>
+    <table id="tblData" class="table table-hover">
+      <thead class="table-success">
+        <tr>
+          <th>名稱</th>
+          <th>手機</th>
+          <th>城市</th>
+          <th>地區</th>
+          <th>郵遞區號</th>
+          <th>住址</th>
+          <th width="15%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var item in Model)
+        {
+          <tr>
+            <td class="align-middle">
+              @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td class="align-middle">
+              @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td class="align-middle">
+              @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td class="align-middle">
+              @Html.DisplayFor(modelItem => item.Zone)
+            </td>
+            <td class="align-middle">
+              @Html.DisplayFor(modelItem => item.PostalCode)
+            </td>
+            <td class="align-middle">
+              @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td class="align-middle text-end">
+              <a asp-controller="Company" asp-action="Upsert" asp-route-id="@item.Id" class="btn btn-sm btn-primary">
+                <i class="bi bi-pencil-square me-1"></i>編輯
+              </a>
+              <a href="#" class="btn btn-sm btn-danger delete-company" data-id="@item.Id">
+                <i class="bi bi-trash-fill me-1"></i>刪除
+              </a>
+              @* <a asp-controller="Company" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                <i class="bi bi-trash-fill me-1"></i>刪除
+              </a> *@
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+@section Scripts {
+  <script src="~/js/company.js" asp-append-version="true"></script>
+}

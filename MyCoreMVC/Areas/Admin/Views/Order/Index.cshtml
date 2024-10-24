@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Order>
+@{
+  ViewData["Title"] = "訂單列表";
+  var status = Context.Request.Query["status"];
+}
+
+<div class="card shadow border-0 bg-body-tertiary mt-4">
+  <div class="card-header bg-primary bg-gradient">
+    <h2 class="text-white text-center mb-0">訂單列表</h2>
+  </div>
+  <div class="card-body">
+    <div class="d-flex justify-content-end">
+      <div class="btn-group mb-3">
+        <a asp-controller="Order" asp-action="Index" asp-route-status="all" class="btn btn-outline-warning @(string.IsNullOrEmpty(status)||status == "all" ? "active" : "")">
+          all
+        </a>
+        <a asp-controller="Order" asp-action="Index" asp-route-status="pending" class="btn btn-outline-warning @(status == "pending" ? "active" : "")">
+          pending
+        </a>
+        <a asp-controller="Order" asp-action="Index" asp-route-status="inprocess" class="btn btn-outline-warning @(status == "inprocess" ? "active" : "")">
+          inprocess
+        </a>
+        <a asp-controller="Order" asp-action="Index" asp-route-status="completed" class="btn btn-outline-warning @(status == "completed" ? "active" : "")">
+          completed
+        </a>
+        <a asp-controller="Order" asp-action="Index" asp-route-status="approved" class="btn btn-outline-warning @(status == "approved" ? "active" : "")">
+          approved
+        </a>
+      </div>
+    </div>
+    <table id="tblData" class="table table-hover">
+      <thead class="table-success">
+        <tr>
+          <th>訂單編號</th>
+          <th>姓名</th>
+          <th>手機</th>
+          <th>Email</th>
+          <th>訂單狀態</th>
+          <th>總計</th>
+          <th width="15%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var order in Model)
+        {
+          <tr>
+            <td class="align-middle">
+              @Html.DisplayFor(modelItem => order.Id)
+            </td>
+            <td class="align-middle">
+              @Html.DisplayFor(modelItem => order.Name)
+            </td>
+            <td class="align-middle">
+              @Html.DisplayFor(modelItem => order.PhoneNumber)
+            </td>
+            <td class="align-middle">
+              @Html.DisplayFor(modelItem => order.ApplicationUser.Email)
+            </td>
+            <td class="align-middle">
+              @Html.DisplayFor(modelItem => order.OrderStatus)
+            </td>
+            <td class="align-middle">
+              @Html.DisplayFor(modelItem => order.OrderTotal)
+            </td>
+            <td class="align-middle text-end">
+              <a asp-controller="Order" asp-action="Detail" asp-route-orderId="@order.Id" class="btn btn-sm btn-primary">
+                <i class="bi bi-pencil-square me-1"></i>編輯
+              </a>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+@section Scripts {
+  @* <script src="~/js/order.js" asp-append-version="true"></script> *@
+}

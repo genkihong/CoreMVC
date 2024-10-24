@@ -18,14 +18,31 @@ body {
 }
 
 main {
-  min-height: calc(100vh - 123px);
+  min-height: calc(100vh - 171px);
 }
 
 .divider::before, .divider::after {
   content: "";
-  color: white;
   flex: 1;
   border-bottom: 1px solid #555;
   margin: auto .25rem;
-  box-shadow: 0 -2px;
+  /*color: white;*/
+  /*box-shadow: 0 -2px;*/
 }
+
+.product-item {
+  border: 0;
+}
+
+  .product-item:hover {
+    border: 1px solid #4cacba;
+  }
+
+.cart-input {
+  width: 50px;
+  border: 1px solid #e6e6e6;
+}
+
+  .cart-input:focus-visible {
+    outline: 1px solid #e6e6e6;
+  }

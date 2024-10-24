@@ -17,7 +17,7 @@ namespace Models
 
     public int ProductId { get; set; }
 
-    [ForeignKey("ProductId")]
+    [ForeignKey(nameof(ProductId))]
     public Product Product { get; set; }
   }
 }

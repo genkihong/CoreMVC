@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -33,6 +34,7 @@ namespace MyCoreMVC.Areas.Identity.Pages.Account
     private readonly IUserEmailStore<IdentityUser> _emailStore;
     private readonly ILogger<RegisterModel> _logger;
     private readonly IEmailSender _emailSender;
+    private readonly IUnitOfWork _unitofwork;
 
     public RegisterModel(
         UserManager<IdentityUser> userManager,
@@ -40,7 +42,8 @@ namespace MyCoreMVC.Areas.Identity.Pages.Account
         IUserStore<IdentityUser> userStore,
         SignInManager<IdentityUser> signInManager,
         ILogger<RegisterModel> logger,
-        IEmailSender emailSender)
+        IEmailSender emailSender,
+        IUnitOfWork unitOfWork)
     {
       _userManager = userManager;
       _roleManager = roleManager;
@@ -49,6 +52,7 @@ namespace MyCoreMVC.Areas.Identity.Pages.Account
       _signInManager = signInManager;
       _logger = logger;
       _emailSender = emailSender;
+      _unitofwork = unitOfWork;
     }
 
     /// <summary>
@@ -106,29 +110,46 @@ namespace MyCoreMVC.Areas.Identity.Pages.Account
 
       [Display(Name = "Role")]
       public string? Role { get; set; }
-
       public IEnumerable<SelectListItem> RoleList { get; set; }
+      [Required]
+      public string Name { get; set; }
+      public string? Address { get; set; }
+      public string? City { get; set; }
+      public string? Zone { get; set; }
+      public string? PostalCode { get; set; }
+      public string? PhoneNumber { get; set; } //IdentityUser 的欄位
+      public int? CompanyId { get; set; }
+      public IEnumerable<SelectListItem> CompanyList { get; set; }
     }
 
 
     public async Task OnGetAsync(string returnUrl = null)
     {
+      bool isRole = await _roleManager.RoleExistsAsync(SD.Role_Customer);
+      //bool isRole = _roleManager.RoleExistsAsync(SD.Role_Customer).GetAwaiter().GetResult()
       // 建立 Role
-      if (!_roleManager.RoleExistsAsync(SD.Role_Customer).GetAwaiter().GetResult())
+      if (!isRole)
       {
-        _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).GetAwaiter().GetResult();
-        _roleManager.CreateAsync(new IdentityRole(SD.Role_Company)).GetAwaiter().GetResult();
-        _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
-        _roleManager.CreateAsync(new IdentityRole(SD.Role_Employee)).GetAwaiter().GetResult();
+        await _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer));
+        await _roleManager.CreateAsync(new IdentityRole(SD.Role_Company));
+        await _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin));
+        await _roleManager.CreateAsync(new IdentityRole(SD.Role_Employee));
       }
 
       Input = new()
       {
+        // 權限下拉選單
         RoleList = _roleManager.Roles.Select(r => r.Name).Select(i => new SelectListItem
         {
           Text = i,
-          Value = i,
+          Value = i
         }),
+        // 公司下拉選單
+        CompanyList = _unitofwork.Company.GetAll().Select(c => new SelectListItem
+        {
+          Text = c.Name,
+          Value = c.Id.ToString()
+        })
       };
 
       ReturnUrl = returnUrl;
@@ -142,6 +163,18 @@ namespace MyCoreMVC.Areas.Identity.Pages.Account
       if (ModelState.IsValid)
       {
         var user = CreateUser();
+        // 新增自訂登入帳號資訊
+        user.Name = Input.Name;
+        user.Address = Input.Address;
+        user.City = Input.City;
+        user.Zone = Input.Zone;
+        user.PostalCode = Input.PostalCode;
+        user.PhoneNumber = Input.PhoneNumber;
+
+        if (Input.Role == SD.Role_Company)
+        {
+          user.CompanyId = Input.CompanyId;
+        }
 
         await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -150,7 +183,7 @@ namespace MyCoreMVC.Areas.Identity.Pages.Account
         if (result.Succeeded)
         {
           _logger.LogInformation("User created a new account with password.");
-          // Role 有值時
+          // 有設定 Role 時
           if (!string.IsNullOrEmpty(Input.Role))
           {
             await _userManager.AddToRoleAsync(user, Input.Role);
@@ -178,7 +211,15 @@ namespace MyCoreMVC.Areas.Identity.Pages.Account
           }
           else
           {
-            await _signInManager.SignInAsync(user, isPersistent: false);
+            if (User.IsInRole(SD.Role_Admin))
+            {
+              TempData["success"] = "新增帳號成功!";
+            }
+            else
+            {
+              // 註冊成功登入
+              await _signInManager.SignInAsync(user, isPersistent: false);
+            }
             return LocalRedirect(returnUrl);
           }
         }
@@ -187,7 +228,7 @@ namespace MyCoreMVC.Areas.Identity.Pages.Account
           ModelState.AddModelError(string.Empty, error.Description);
         }
       }
-
+      // 驗證失敗時，Roles下拉選單
       Input = new()
       {
         RoleList = _roleManager.Roles.Select(r => r.Name).Select(i => new SelectListItem
@@ -204,6 +245,7 @@ namespace MyCoreMVC.Areas.Identity.Pages.Account
     {
       try
       {
+        // 自訂 ApplicationUser
         return Activator.CreateInstance<ApplicationUser>();
         //return Activator.CreateInstance<IdentityUser>();
       }

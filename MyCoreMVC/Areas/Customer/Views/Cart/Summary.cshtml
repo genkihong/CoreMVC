@@ -1,0 +1,107 @@
+﻿@model ShoppingCartViewModel
+
+<div class="card border-0">
+  <div class="card-header bg-info bg-gradient text-light">
+    <div class="row">
+      <div class="col-6">
+        <h5 class="mb-0">
+          Order Summary
+        </h5>
+      </div>
+      <div class="col-6 text-end">
+        <a asp-action="Index" class="btn btn-outline-warning btn-sm">Back to Cart</a>
+      </div>
+    </div>
+  </div>
+  <form asp-action="Summary">
+    <div class="card-body">
+      <div class="row">
+        @* Shipping Details *@
+        <div class="col-12 col-lg-6">
+          <div class="row mb-3">
+            <h4 class="d-flex justify-content-between align-items-center mb-0">
+              <span class="text-info">Shipping Details:</span>
+            </h4>
+          </div>
+          <div class="row mb-2">
+            <label asp-for="Order.Name" class="col-3"></label>
+            <div class="col-9">
+              <input asp-for="Order.Name" class="form-control" />
+              <span asp-validation-for="Order.Name" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <label asp-for="Order.PhoneNumber" class="col-3"></label>
+            <div class="col-9">
+              <input asp-for="Order.PhoneNumber" class="form-control" />
+              <span asp-validation-for="Order.PhoneNumber" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <label asp-for="Order.City" class="col-3"></label>
+            <div class="col-9">
+              <input asp-for="Order.City" class="form-control" />
+              <span asp-validation-for="Order.City" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <label asp-for="Order.Zone" class="col-3"></label>
+            <div class="col-9">
+              <input asp-for="Order.Zone" class="form-control" />
+              <span asp-validation-for="Order.Zone" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <label asp-for="Order.PostalCode" class="col-3"></label>
+            <div class="col-9">
+              <input asp-for="Order.PostalCode" class="form-control" />
+              <span asp-validation-for="Order.PostalCode" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="row">
+            <label asp-for="Order.Address" class="col-3"></label>
+            <div class="col-9">
+              <input asp-for="Order.Address" class="form-control" />
+              <span asp-validation-for="Order.Address" class="text-danger"></span>
+            </div>
+          </div>
+        </div>
+        @* Order Summary *@
+        <div class="col-12 col-lg-5 offset-lg-1">
+          <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-info">Order Summary:</span>
+          </h4>
+          <ul class="list-group mb-3">
+            @foreach (var cart in Model.ShoppingCartList)
+            {
+              <li class="list-group-item d-flex justify-content-between">
+                <div>
+                  <h6 class="mb-0">@cart.Product.Title</h6>
+                  <small class="text-muted">Quantity: @cart.Quantity</small>
+                </div>
+                <span class="text-muted">@cart.SubTotal.ToString("c").Replace(".00", "")</span>
+              </li>
+            }
+            <li class="list-group-item d-flex justify-content-between bg-light">
+              <small class="text-info">Total</small>
+              <strong class="text-info">@Model.Order.OrderTotal.ToString("c").Replace(".00", "")</strong>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="row align-items-center">
+        <div class="col-12 col-md-8">
+          <p class="mb-0" style="color:maroon; font-size:14px;">
+            Estimate Arrival Date:
+            @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()
+          </p>
+        </div>
+        <div class="col-12 col-md-4">
+          <button type="submit" class="btn btn-info w-100">建立訂單</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

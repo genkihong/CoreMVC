@@ -35,10 +35,11 @@ namespace DataAccess.Repository
         result.Price50 = product.Price50;
         result.Price100 = product.Price100;
         result.CategoryId = product.CategoryId;
-        if (product.ImageUrl != null)
-        {
-          result.ImageUrl = product.ImageUrl;
-        }
+        result.ProductImages = product.ProductImages;
+        //if (product.ImageUrl != null)
+        //{
+        //  result.ImageUrl = product.ImageUrl;
+        //}
       }
     }
   }

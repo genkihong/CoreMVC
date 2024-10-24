@@ -1,0 +1,119 @@
+﻿@model ShoppingCart
+
+<div class="card border-0">
+  <div class="card-header bg-warning bg-gradient text-light text-center">
+    <h3 class="mb-0">@Model.Product.Title</h3>
+    @* <p class="fw-semibold mb-0">by @Model.Product.Author</p> *@
+  </div>
+  <div class="card-body">
+    <div class="row mb-5">
+      <div class="col-6 col-md-2">
+        <a asp-action="Index" class="btn btn-outline-warning bg-gradient fw-semibold btn-sm text-uppercase">
+          <small>回首頁</small>
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-lg-4">
+        @* <img src="/images/product/@Model.Product.ImageUrl" alt="@Model.Product.ImageUrl" class="img-thumbnail" /> *@
+        @if (Model.Product.ProductImages != null && Model.Product.ProductImages.Count > 0)
+        {
+          <div id="carouselExampleIndicators" class="carousel slide">
+            <div class="carousel-indicators">
+              @foreach (var item in Model.Product.ProductImages.Select((img, index) => new { Image = img, Index = index }))
+              {
+                <button type="button"
+                        data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide-to="@item.Index"
+                        class="@(item.Index == 0 ? "active" : "")"
+                        aria-current="true"
+                        aria-label="Slide 1"></button>
+              }
+            </div>
+            <div class="carousel-inner">
+              @foreach (var item in Model.Product.ProductImages.Select((img, index) => new { Image = img, Index = index }))
+              {
+                <div class="carousel-item @(item.Index == 0 ? "active" : "")">
+                  <img src="@item.Image.ImageUrl" class="img-thumbnail" alt="">
+                </div>
+              }
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        }
+      </div>
+      <div class="col-12 col-lg-8">
+        <div class="mb-3">
+          <span class="badge bg-warning">@Model.Product.Category.Name</span>
+        </div>
+        <h6 class="text-dark text-opacity-50 mb-3">ISBN : @Model.Product.ISBN</h6>
+        <h6 class="text-dark text-opacity-50 mb-3">
+          原價:
+          <span class="text-decoration-line-through">
+            @Model.Product.ListPrice.ToString("c").Replace(".00", "")
+          </span>
+        </h6>
+        <div class="row text-center">
+          <div class="py-1 col-3 col-lg-2 bg-white border-bottom">
+            <div class="text-dark text-opacity-50 fw-semibold">數量</div>
+          </div>
+          <div class="py-1 col-3 col-lg-2 bg-white border-bottom">
+            <div class="text-dark text-opacity-50 fw-semibold">1-50</div>
+          </div>
+          <div class="py-1 col-3 col-lg-2 bg-white border-bottom">
+            <div class="text-dark text-opacity-50 fw-semibold">51-100</div>
+          </div>
+          <div class="py-1 col-3 col-lg-2 bg-white border-bottom">
+            <div class="text-dark text-opacity-50 fw-semibold">100+</div>
+          </div>
+        </div>
+        <div class="row text-center mb-3">
+          <div class="py-1 col-3 col-lg-2 bg-white text-warning fw-bold">
+            <div>金額</div>
+          </div>
+          <div class="py-1 col-3 col-lg-2 bg-white text-warning fw-bold">
+            <div>@Model.Product.Price.ToString("c").Replace(".00", "")</div>
+          </div>
+          <div class="py-1 col-3 col-lg-2 bg-white text-warning fw-bold">
+            <div>@Model.Product.Price50.ToString("c").Replace(".00", "")</div>
+          </div>
+          <div class="py-1 col-3 col-lg-2 bg-white text-warning fw-bold">
+            <div>@Model.Product.Price100.ToString("c").Replace(".00", "")</div>
+          </div>
+        </div>
+        <div class="lh-sm">
+          @Html.Raw(Model.Product.Description)
+        </div>
+        <form asp-controller="Home" asp-action="Detail">
+          <input hidden asp-for="ProductId" />
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <div class="input-group">
+                <span class="input-group-text bg-warning text-white border-0 fw-semibold">
+                  數量
+                </span>
+                <input asp-for="Quantity" class="form-control text-center" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-6">
+              <button type="submit" class="btn btn-warning bg-gradient w-100 text-uppercase fw-semibold">
+                加入購物車
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

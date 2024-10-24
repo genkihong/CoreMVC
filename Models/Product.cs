@@ -35,41 +35,39 @@ namespace Models
     [Required(ErrorMessage = "{0}必填")]
     [Range(1, 1000)]
     [Display(Name = "價格")]
-    public double ListPrice { get; set; }
+    public int ListPrice { get; set; }
 
     [Required(ErrorMessage = "{0}必填")]
     [Range(1, 1000)]
     [Display(Name = "價格 1-50")]
-    public double Price { get; set; }
+    public int Price { get; set; }
 
     [Required(ErrorMessage = "{0}必填")]
     [Range(1, 1000)]
     [Display(Name = "價格 50+")]
-    public double Price50 { get; set; }
+    public int Price50 { get; set; }
 
     [Required(ErrorMessage = "{0}必填")]
     [Display(Name = "價格 100+")]
     [Range(1, 1000)]
-    public double Price100 { get; set; }
+    public int Price100 { get; set; }
 
     [Required(ErrorMessage = "{0}必填")]
     [Display(Name = "商品類別")]
     public int CategoryId { get; set; }
 
-    [ForeignKey("CategoryId")]
+    [ForeignKey(nameof(CategoryId))]
     public Category? Category { get; set; }
 
     [Display(Name = "圖片")]
     [DataType(DataType.ImageUrl)]
     [RegularExpression(@".*\.(jpg|jpeg|png|gif|bmp)$", ErrorMessage = "僅允許上傳圖片格式 (jpg, jpeg, png, gif, bmp)。")]
     [NotMapped]
-    public IFormFile? Image { get; set; }
+    public List<IFormFile>? Images { get; set; }
 
-    [MaxLength(100)]
-    [Display(Name = "圖片連結")]
-    public string? ImageUrl { get; set; }
-
-    
-    //public ICollection<ProductImage> ProductImages { get; set; }
+    //[MaxLength(100)]
+    //[Display(Name = "圖片連結")]
+    //public string? ImageUrl { get; set; }
+    public ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
   }
 }

@@ -3,45 +3,43 @@
 <div class="row mt-4">
   @foreach (var product in Model)
   {
-    <div class="col-lg-4 col-sm-6 mb-3">
-      <div class="card border-0 shadow border-top border-5 rounded p-1">
-        <img src="/images/product/@product.ImageUrl" class="card-img-top" style="min-height: 205px" />
-        @* @if (product.ProductImages != null && product.ProductImages.Count() > 0)
-      {
-      <img src="@product.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top rounded" />
-      }
-      else
-      {
-      <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
-      } *@
+    <div class="col-lg-3 col-sm-6 mb-3">
+      <div class="card product-item p-2">
+        <a asp-action="Detail" asp-route-productId="@product.Id" class="text-decoration-none">
+          @* <img src="/images/product/@product.ImageUrl" class="card-img-top" style="min-height: 205px" /> *@
+          @if (product.ProductImages != null && product.ProductImages.Count > 0)
+          {
+            <img src="@product.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top" style="max-height: 160px" />
+          }
+          else
+          {
+            <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
+          }
 
-        <div class="card-body bg-light pb-0">
-          <div class="text-center">
-            <h4 class="card-title text-dark opacity-75">@product.Title</h4>
-            @* <p class="card-title text-warning text-center">by <b>@product.Author</b></p> *@
-          </div>
-          <div class="ps-1">
-            <p class="text-dark text-opacity-75 text-center mb-0">
+          <div class="card-body">
+            <div class="text-center">
+              <h4 class="card-title text-dark opacity-75">@product.Title</h4>
+              @* <p class="card-title text-warning text-center">by <b>@product.Author</b></p> *@
+            </div>
+            <div class="text-dark text-opacity-75 text-center mb-0">
               List Price:
               <span class="text-decoration-line-through">
                 @product.ListPrice.ToString("c")
               </span>
-            </p>
-          </div>
-          <div class="ps-1">
-            <p class="text-danger text-center">
+            </div>
+            <div class="text-danger text-center">
               As low as:
               <span>
                 @product.Price100.ToString("c")
               </span>
-            </p>
+            </div>
           </div>
-        </div>
-        <div>
-          <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary bg-gradient border-0 rounded-0 w-100">
-            Details
-          </a>
-        </div>
+          @* <div>
+        <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary bg-gradient border-0 rounded-0 w-100">
+        Details
+        </a>
+        </div> *@
+        </a>
       </div>
     </div>
   }

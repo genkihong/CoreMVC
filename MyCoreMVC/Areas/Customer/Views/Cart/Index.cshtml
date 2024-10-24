@@ -1,0 +1,78 @@
+﻿@model ShoppingCartViewModel
+
+<div class="card border-0">
+  <div class="card-header bg-success bg-gradient text-light">
+    <h5 class="mb-0">Shopping Cart</h5>
+  </div>
+  <div class="card-body">
+    <div class="row mb-5">
+      <div class="col-6 col-md-2">
+        <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="btn btn-sm btn-outline-success text-uppercase">
+          <small>繼續購物</small>
+        </a>
+      </div>
+    </div>
+
+    @foreach (var cart in Model.ShoppingCartList)
+    {
+      <div class="row border-bottom mb-3 mb-md-0">
+        @* 商品圖片 *@
+        <div class="col-md-1 d-none d-md-block py-2">
+          @* <img src="/images/product/@cart.Product.ImageUrl" alt="@cart.Product.ImageUrl" class="img-thumbnail" /> *@
+          @if (cart.Product.ProductImages != null && cart.Product.ProductImages.Count() > 0)
+          {
+            <img src="@cart.Product.ProductImages.FirstOrDefault().ImageUrl" class="img-thumbnail" />
+          }
+          else
+          {
+            <img src="https://placehold.co/500x600/png" class="img-thumbnail" />
+          }
+        </div>
+        @* 商品名稱 *@
+        <div class="col-12 col-md-5 align-content-center">
+          <h5 class="text-uppercase">
+            <strong>@cart.Product.Title</strong>
+          </h5>
+          @* <small>@Html.Raw(cart.Product.Description)</small> *@
+        </div>
+        @* 商品金額 *@
+        <div class="col-12 col-md-6 text-md-center align-content-center">
+          <div class="row pb-2 pb-md-0">
+            <div class="col-4 align-content-center">
+              <h6 class="fw-semibold mb-0">
+                @cart.Price.ToString("c").Replace(".00", "")
+                <i class="bi bi-x-lg text-muted"></i>
+                @cart.Quantity
+              </h6>
+            </div>
+            <div class="col-6">
+              <div class="input-group justify-content-center">
+                <a asp-action="Minus" asp-route-cartId="@cart.Id" class="btn btn-outline-secondary">
+                  <i class="bi bi-dash-lg"></i>
+                </a>
+                <input type="text" class="cart-input text-center" value="@cart.Quantity">
+                <a asp-action="Plus" asp-route-cartId="@cart.Id" class="btn btn-outline-secondary">
+                  <i class="bi bi-plus-lg"></i>
+                </a>
+              </div>
+            </div>
+            <div class="col-2 text-end">
+              <a asp-action="Remove" asp-route-cartId="@cart.Id" class="btn btn-danger">
+                <i class="bi bi-trash3" style="font-size:1rem;"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+    @* 總計 *@
+    <div class="py-3">
+      <h5 class="fw-semibold text-dark">總計: @Model.Order.OrderTotal.ToString("c").Replace(".00", "")</h5>
+      <div class="row justify-content-center">
+        <div class="col-md-3">
+          <a asp-action="Summary" class="btn btn-success border-0 bg-gradient w-100">訂購明細</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

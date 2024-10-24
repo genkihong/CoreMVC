@@ -2,6 +2,10 @@
 using System.Diagnostics;
 using Models;
 using DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Utility;
+using Microsoft.AspNetCore.Http;
 
 namespace MyCoreMVC.Areas.Customer.Controllers
 {
@@ -22,23 +26,71 @@ namespace MyCoreMVC.Areas.Customer.Controllers
     /// <returns></returns>
     public IActionResult Index()
     {
-      IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category");
+      var claimsIdentity = (ClaimsIdentity)User.Identity;
+      var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+      if (claim != null)
+      {
+        // 購物車總數量
+        var count = _unitOfWork.ShoppingCart.GetAll(s => s.ApplicationUserId == claim.Value).Count();
+        // 寫入 Session
+        HttpContext.Session.SetInt32(SD.SessionCart, count);
+      }
+
+      IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category,ProductImages");
       return View(productList);
     }
     /// <summary>
-    /// 產品明細
+    /// 商品明細
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="productId"></param>
     /// <returns></returns>
-    public IActionResult Details(int? id)
+    public IActionResult Detail(int productId)
     {
-      if(!id.HasValue)
+      ShoppingCart cart = new()
       {
-        return NotFound();
+        Product = _unitOfWork.Product.Get(p => p.Id == productId, includeProperties: "Category,ProductImages"),
+        Quantity = 1,
+        ProductId = productId
+      };
+
+      return View(cart);
+    }
+    /// <summary>
+    /// 加入/更新購物車
+    /// </summary>
+    /// <param name="cart"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Authorize]
+    public IActionResult Detail(ShoppingCart cart)
+    {
+      var claimsIdentity = (ClaimsIdentity)User.Identity;
+      var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+      ShoppingCart shoppingCart = _unitOfWork.ShoppingCart.Get(s => s.ApplicationUserId == userId && s.ProductId == cart.ProductId);
+
+      if (shoppingCart == null)
+      {
+        // 加入購物車
+        cart.ApplicationUserId = userId;
+        _unitOfWork.ShoppingCart.Add(cart);
+        _unitOfWork.Save();
+        // 購物車總數量
+        var count = _unitOfWork.ShoppingCart.GetAll(s => s.ApplicationUserId == userId).Count();
+        // 寫入 Session
+        HttpContext.Session.SetInt32(SD.SessionCart, count);
+      }
+      else
+      {
+        // 更新購物車
+        shoppingCart.Quantity += cart.Quantity;
+        _unitOfWork.ShoppingCart.Update(shoppingCart);
+        _unitOfWork.Save();
       }
 
-      Product product = _unitOfWork.Product.Get(p => p.Id == id, includeProperties: "Category");
-      return View(product);
+      TempData["success"] = "已加入購物車";
+      return RedirectToAction(nameof(Index));
     }
     public IActionResult Privacy()
     {

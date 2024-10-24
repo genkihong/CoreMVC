@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+  // 從 Session 取得購物車總數量
+  var count = HttpContextAccessor.HttpContext.Session.GetInt32(SD.SessionCart);
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -30,6 +37,9 @@
             <li class="nav-item">
               <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" asp-area="Admin" asp-controller="Order" asp-action="Index">訂單管理</a>
+            </li>
             @if (User.IsInRole(SD.Role_Admin))
             {
               <li class="nav-item dropdown">
@@ -38,17 +48,33 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li>
-                    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
+                    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">類別管理</a>
                   </li>
                   <li>
-                    <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
+                    <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">商品管理</a>
                   </li>
-                  @* <li>
-                <hr class="dropdown-divider">
-                </li> *@
+                  <li>
+                    <a class="dropdown-item" asp-area="Admin" asp-controller="Company" asp-action="Index">公司管理</a>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">新增帳號</a>
+                  </li>
                 </ul>
               </li>
             }
+            <li class="nav-item">
+              <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
+                @await Component.InvokeAsync("ShoppingCart")
+                @* <i class="bi bi-cart" style="font-size: 1rem;"></i>
+                @if (count != null)
+                {
+                <span>(@count)</span>
+                } *@
+              </a>
+            </li>
           </ul>
           <partial name="_LoginPartial" />
           @* <form class="d-flex">

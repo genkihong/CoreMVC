@@ -12,7 +12,7 @@
   <div class="card-body p-4">
     <form method="post" class="row" enctype="multipart/form-data">
       <input asp-for="Product.Id" type="hidden" />
-      <input asp-for="Product.ImageUrl" type="hidden" />
+      @* <input asp-for="Product.ImageUrl" type="hidden" /> *@
       <div class="border p-3">
         @*<div asp-validation-summary="ModelOnly"></div>*@
         @* 名稱 *@
@@ -76,48 +76,62 @@
         </div>
         @* 上傳圖片 *@
         <div class="py-2 col-12">
-          <div class="row">
-            <div class="col-10">
-              <label asp-for="Product.Image" class="mb-2">上傳圖片</label>
-              <input asp-for="Product.Image" class="form-control border-0 shadow" />
-              <span asp-validation-for="Product.Image" class="text-danger"></span>
-              @* <label for="uploadImage" class="mb-2">上傳圖片</label> *@
-              @* <input type="file" name="uploadImage" id="uploadImage" class="form-control border-0 shadow" /> *@
-            </div>
-            <div class="col-2 text-center">
-              @if (Model.Product.Id == 0)
-              {
-                <div class="border border-2 text-muted">
+          <label asp-for="Product.ProductImages" class="mb-2">上傳圖片</label>
+          <input asp-for="Product.Images" class="form-control border-0 shadow" multiple />
+          <span asp-validation-for="Product.ProductImages" class="text-danger"></span>
+
+          @* <input asp-for="Product.Image" class="form-control border-0 shadow" /> *@
+          @* <span asp-validation-for="Product.Image" class="text-danger"></span> *@
+          @* <label for="uploadImage" class="mb-2">上傳圖片</label> *@
+          @* <input type="file" name="uploadImage" id="uploadImage" class="form-control border-0 shadow" /> *@
+
+
+          @if (Model.Product.Id == 0)
+          {
+            <div class="row mt-3" id="prevImage">
+              @* <div class="col-2">
+                <div class="border border-2 text-center text-muted">
                   <i class="bi bi-image" style="font-size: 5rem;"></i>
                 </div>
-                <img src="" alt="" class="img-thumbnail d-none" id="prevImage" />
-              }
-              else
-              {
-                <div class="border border-2 text-muted">
-                  <i class="bi bi-image d-none" style="font-size: 5rem;"></i>
-                </div>
-                <img src="/images/product/@Model.Product.ImageUrl" alt="@Model.Product.ImageUrl" class="img-thumbnail" id="prevImage" />
-              }
+              </div> *@
             </div>
-          </div>
+          }
+          else
+          {
+            if (Model.Product.ProductImages.Count > 0)
+            {
+              <div class="row mt-3">
+                @foreach (var image in Model.Product.ProductImages)
+                {
+                  <div class="col-2 text-center">
+                    <div class="card mb-3">
+                      <img src="@image.ImageUrl" alt="@image.ImageUrl" class="card-img-top" />
+                      <a asp-action="DeleteImage" asp-route-imageId="@image.Id" class="btn btn-sm btn-outline-danger rounded-top-0 w-100">
+                        <i class="bi-trash-fill"></i>
+                      </a>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          }
         </div>
-        <div class="row pt-2">
-          <div class="col-6 col-md-3">
-            @if (Model.Product.Id == 0)
-            {
-              <button type="submit" class="btn btn-primary form-control">新增</button>
-            }
-            else
-            {
-              <button type="submit" class="btn btn-primary form-control">修改</button>
-            }
-          </div>
-          <div class="col-6 col-md-3">
-            <a asp-controller="Product" asp-action="Index" class="btn btn-outline-primary border form-control">
-              Back to List
-            </a>
-          </div>
+      </div>
+      <div class="row pt-2">
+        <div class="col-6 col-md-3">
+          @if (Model.Product.Id == 0)
+          {
+            <button type="submit" class="btn btn-primary form-control">新增</button>
+          }
+          else
+          {
+            <button type="submit" class="btn btn-primary form-control">修改</button>
+          }
+        </div>
+        <div class="col-6 col-md-3">
+          <a asp-controller="Product" asp-action="Index" class="btn btn-outline-primary border form-control">
+            Back to List
+          </a>
         </div>
       </div>
     </form>
